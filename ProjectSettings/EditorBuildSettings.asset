@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Project/Scenes/Scene_1.unity
-    guid: 1f1b246dec7e65744b9aba2bc3ed999f
+    path: Assets/_FPSMultiplayer/Scenes/Scene_1.unity
+    guid: 20d52103ef1adfa43b39b0bba59109f9
   - enabled: 1
-    path: Assets/_Project/Scenes/Scene_2.unity
-    guid: a7a43ad56bbb66348b17132d1eda0f3d
+    path: Assets/_FPSMultiplayer/Scenes/Scene_2.unity
+    guid: 1b322ab9481cbb549851737f6e96f380
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 35845fe01580c41289b024647b1d1c53, type: 3}
   m_UseUCBPForAssetBundles: 0
