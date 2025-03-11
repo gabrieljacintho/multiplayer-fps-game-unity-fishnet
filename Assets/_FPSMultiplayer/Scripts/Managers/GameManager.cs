@@ -24,5 +24,7 @@ public sealed class GameManager : NetworkBehaviour
         }
 
         CanStart.Value = Players.All(p => p.IsReady);
+
+        Debug.Log($"Can Start = {CanStart.Value}");
     }
 }
