@@ -1,34 +1,44 @@
 using FishNet.Object;
 using UnityEngine;
 
-public class PawnLook : NetworkBehaviour
+namespace FPSMultiplayer
 {
-    [SerializeField] private Transform _cameraTransform;
-    [SerializeField] private float _xMin;
-    [SerializeField] private float _xMax;
-
-    private PawnInput _input;
-    private Vector3 _eulerAngles;
-
-
-    public override void OnStartNetwork()
+    public class PawnLook : NetworkBehaviour
     {
-        base.OnStartNetwork();
-        _input = GetComponent<PawnInput>();
-    }
+        [SerializeField] private Transform _cameraTransform;
+        [SerializeField] private float _xMin;
+        [SerializeField] private float _xMax;
 
-    private void Update()
-    {
-        if (!IsOwner)
+        private PawnInput _input;
+        private Vector3 _eulerAngles;
+
+
+        public override void OnStartNetwork()
         {
-            return;
+            base.OnStartNetwork();
+            _input = GetComponent<PawnInput>();
         }
 
-        _eulerAngles.x -= _input.MouseY;
-        _eulerAngles.x = Mathf.Clamp(_eulerAngles.x, _xMin, _xMax);
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            _cameraTransform.GetComponent<Camera>().enabled = IsOwner;
+            _cameraTransform.GetComponent<AudioListener>().enabled = IsOwner;
+        }
 
-        _cameraTransform.eulerAngles = _eulerAngles;
+        private void Update()
+        {
+            if (!IsOwner)
+            {
+                return;
+            }
 
-        transform.Rotate(0f, _input.MouseX, 0f, Space.World);
+            _eulerAngles.x -= _input.MouseY;
+            _eulerAngles.x = Mathf.Clamp(_eulerAngles.x, _xMin, _xMax);
+
+            _cameraTransform.localEulerAngles = _eulerAngles;
+
+            transform.Rotate(0f, _input.MouseX, 0f, Space.World);
+        }
     }
 }

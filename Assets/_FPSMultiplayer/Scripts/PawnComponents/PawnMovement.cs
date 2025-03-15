@@ -1,52 +1,55 @@
 using FishNet.Object;
 using UnityEngine;
 
-public class PawnMovement : NetworkBehaviour
+namespace FPSMultiplayer
 {
-    [SerializeField] private float _speed = 1f;
-    [SerializeField] private float _jumpSeed = 1f;
-    [SerializeField] private float _gravityScale = 1f;
-
-    private CharacterController _characterController;
-    private PawnInput _input;
-
-    private Vector3 _velocity;
-
-
-    public override void OnStartNetwork()
+    public class PawnMovement : NetworkBehaviour
     {
-        base.OnStartNetwork();
-        _characterController = GetComponent<CharacterController>();
-        _input = GetComponent<PawnInput>();
-    }
+        [SerializeField] private float _speed = 1f;
+        [SerializeField] private float _jumpSeed = 1f;
+        [SerializeField] private float _gravityScale = 1f;
 
-    private void Update()
-    {
-        if (!IsOwner)
+        private CharacterController _characterController;
+        private PawnInput _input;
+
+        private Vector3 _velocity;
+
+
+        public override void OnStartNetwork()
         {
-            return;
+            base.OnStartNetwork();
+            _characterController = GetComponent<CharacterController>();
+            _input = GetComponent<PawnInput>();
         }
 
-        Vector3 input = (transform.forward * _input.Vertical) + (transform.right * _input.Horizontal);
-        Vector3 desiredVelocity = Vector3.ClampMagnitude(input * _speed, _speed);
-
-        _velocity.x = desiredVelocity.x;
-        _velocity.z = desiredVelocity.z;
-
-        if (_characterController.isGrounded)
+        private void Update()
         {
-            _velocity.y = 0f;
-
-            if (_input.Jump)
+            if (!IsOwner)
             {
-                _velocity.y = _jumpSeed;
+                return;
             }
-        }
-        else
-        {
-            _velocity.y += Physics.gravity.y * _gravityScale * Time.deltaTime;
-        }
 
-        _characterController.Move(_velocity * Time.deltaTime);
+            Vector3 input = (transform.forward * _input.Vertical) + (transform.right * _input.Horizontal);
+            Vector3 desiredVelocity = Vector3.ClampMagnitude(input * _speed, _speed);
+
+            _velocity.x = desiredVelocity.x;
+            _velocity.z = desiredVelocity.z;
+
+            if (_characterController.isGrounded)
+            {
+                _velocity.y = 0f;
+
+                if (_input.Jump)
+                {
+                    _velocity.y = _jumpSeed;
+                }
+            }
+            else
+            {
+                _velocity.y += Physics.gravity.y * _gravityScale * Time.deltaTime;
+            }
+
+            _characterController.Move(_velocity * Time.deltaTime);
+        }
     }
 }

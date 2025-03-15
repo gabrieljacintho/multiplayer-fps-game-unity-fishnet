@@ -3,28 +3,56 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
-public sealed class GameManager : NetworkBehaviour
+namespace FPSMultiplayer
 {
-    public readonly SyncList<Player> Players = new SyncList<Player>();
-    public readonly SyncVar<bool> CanStart = new SyncVar<bool>();
-
-    public static GameManager Instance { get; private set; }
-
-
-    private void Awake()
+    public sealed class GameManager : NetworkBehaviour
     {
-        Instance = this;
-    }
+        public readonly SyncList<Player> Players = new SyncList<Player>();
+        public readonly SyncVar<bool> CanStart = new SyncVar<bool>();
 
-    private void Update()
-    {
-        if (!IsServerInitialized)
+        public static GameManager Instance { get; private set; }
+
+
+        private void Awake()
         {
-            return;
+            Instance = this;
         }
 
-        CanStart.Value = Players.All(p => p.IsReady);
+        private void Update()
+        {
+            if (!IsServerInitialized)
+            {
+                return;
+            }
 
-        Debug.Log($"Can Start = {CanStart.Value}");
+            CanStart.Value = Players.All(p => p.IsReady);
+
+            Debug.Log($"Can Start = {CanStart.Value}");
+        }
+
+        [Server]
+        public void StartGame()
+        {
+            if (!CanStart.Value)
+            {
+                return;
+            }
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Player player = Players[i];
+                player.StartGame();
+            }
+        }
+
+        [Server]
+        public void StopGame()
+        {
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Player player = Players[i];
+                player.StopGame();
+            }
+        }
     }
 }

@@ -1,40 +1,43 @@
 using FishNet.Object;
 using UnityEngine;
 
-public sealed class PawnInput : NetworkBehaviour
+namespace FPSMultiplayer
 {
-    public float Horizontal;
-    public float Vertical;
-
-    public float MouseX;
-    public float MouseY;
-
-    public float Sensitivity = 1f;
-
-    public bool Jump;
-
-    private Pawn _pawn;
-
-
-    public override void OnStartNetwork()
+    public sealed class PawnInput : NetworkBehaviour
     {
-        base.OnStartNetwork();
-        _pawn = GetComponent<Pawn>();
-    }
+        public float Horizontal;
+        public float Vertical;
 
-    private void Update()
-    {
-        if (!IsOwner)
+        public float MouseX;
+        public float MouseY;
+
+        public float Sensitivity = 1f;
+
+        public bool Jump;
+        public bool Fire;
+
+
+        public override void OnStartNetwork()
         {
-            return;
+            base.OnStartNetwork();
         }
 
-        Horizontal = Input.GetAxis("Horizontal");
-        Vertical = Input.GetAxis("Vertical");
+        private void Update()
+        {
+            if (!IsOwner)
+            {
+                return;
+            }
 
-        MouseX = Input.GetAxis("Mouse X") * Sensitivity;
-        MouseY = Input.GetAxis("Mouse Y") * Sensitivity;
+            Horizontal = Input.GetAxis("Horizontal");
+            Vertical = Input.GetAxis("Vertical");
 
-        Jump = Input.GetButton("Jump");
+            MouseX = Input.GetAxis("Mouse X") * Sensitivity;
+            MouseY = Input.GetAxis("Mouse Y") * Sensitivity;
+
+            Jump = Input.GetButton("Jump");
+
+            Fire = Input.GetButton("Fire1");
+        }
     }
 }

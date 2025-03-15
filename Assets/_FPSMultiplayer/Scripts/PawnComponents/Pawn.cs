@@ -3,8 +3,29 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
-public sealed class Pawn : NetworkBehaviour
+namespace FPSMultiplayer
 {
-    [AllowMutableSyncType, SerializeField] private SyncVar<Player> _player = new SyncVar<Player>();
-    [AllowMutableSyncType, SerializeField] private SyncVar<float> _health = new SyncVar<float>();
+    public sealed class Pawn : NetworkBehaviour
+    {
+        [AllowMutableSyncType, SerializeField] private SyncVar<Player> _player = new SyncVar<Player>();
+        [AllowMutableSyncType, SerializeField] private SyncVar<float> _health = new SyncVar<float>();
+
+        public float Health => _health.Value;
+
+
+        public void ReceiveDamage(float amount)
+        {
+            if (!IsSpawned)
+            {
+                return;
+            }
+
+            _health.Value -= amount;
+
+            if (_health.Value <= 0f)
+            {
+                Despawn();
+            }
+        }
+    }
 }

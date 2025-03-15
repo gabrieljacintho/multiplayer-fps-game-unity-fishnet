@@ -1,6 +1,6 @@
-using UnityEngine;
+using FishNet.Object;
 
-public abstract class View : MonoBehaviour
+public abstract class View : NetworkBehaviour
 {
     public bool IsInitialized { get; private set; }
 
