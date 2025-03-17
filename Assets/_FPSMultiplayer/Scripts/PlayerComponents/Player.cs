@@ -76,8 +76,15 @@ namespace FPSMultiplayer
             Spawn(pawnInstance, Owner); // Spawn on server
 
             _pawn.Value = pawnInstance.GetComponent<Pawn>();
+            _pawn.Value.Player = this;
 
             TargetPawnSpawned(Owner);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void ServerSpawnPawn()
+        {
+            StartGame();
         }
 
         public void StopGame()
@@ -98,6 +105,12 @@ namespace FPSMultiplayer
         private void TargetPawnSpawned(NetworkConnection networkConnection = null)
         {
             ViewManager.Instance.Show<UI.MainView>();
+        }
+
+        [TargetRpc]
+        public void TargetPawnKilled(NetworkConnection connection)
+        {
+            ViewManager.Instance.Show<UI.RespawnView>();
         }
     }
 }

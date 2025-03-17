@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using FishNet.Object;
+﻿using FishNet.Object;
 using UnityEngine;
 
 namespace FPSMultiplayer.PawnComponents
@@ -10,7 +9,6 @@ namespace FPSMultiplayer.PawnComponents
         [SerializeField] private float _damage = 5f;
         [SerializeField] private float _shotDelay = 0.2f;
 
-        private Pawn _pawn;
         private PawnInput _input;
 
         private float _timeUntilNextShot;
@@ -19,7 +17,6 @@ namespace FPSMultiplayer.PawnComponents
         public override void OnStartNetwork()
         {
             base.OnStartNetwork();
-            _pawn = GetComponent<Pawn>();
             _input = GetComponent<PawnInput>();
         }
 
@@ -51,6 +48,11 @@ namespace FPSMultiplayer.PawnComponents
             if (Physics.Raycast(origin, direction, out RaycastHit hit) && hit.transform.TryGetComponent(out Pawn pawn))
             {
                 pawn.ReceiveDamage(_damage);
+                Debug.Log("Fire in!");
+            }
+            else
+            {
+                Debug.Log("Fire out!");
             }
         }
     }
