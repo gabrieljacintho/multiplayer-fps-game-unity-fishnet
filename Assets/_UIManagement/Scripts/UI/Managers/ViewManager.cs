@@ -2,11 +2,13 @@ using UnityEngine;
 
 public sealed class ViewManager : MonoBehaviour
 {
+    public static ViewManager Instance { get; private set; }
+
     [SerializeField] private bool _autoInitialize;
     [SerializeField] private View[] _views;
     [SerializeField] private View _defaultView;
 
-    public static ViewManager Instance { get; private set; }
+    private View _currentView;
 
 
     private void Awake()
@@ -33,6 +35,7 @@ public sealed class ViewManager : MonoBehaviour
         if (_defaultView != null)
         {
             _defaultView.Show();
+            _currentView = _defaultView;
         }
     }
 
@@ -43,11 +46,23 @@ public sealed class ViewManager : MonoBehaviour
             if (view is T)
             {
                 view.Show(args);
+                _currentView = view;
             }
             else
             {
                 view.Hide();
             }
         }
+    }
+
+    public void Show(View view, object args = null)
+    {
+        if (_currentView != null)
+        {
+            _currentView.Hide();
+        }
+
+        view.Show(args);
+        _currentView = view;
     }
 }
